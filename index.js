@@ -8,7 +8,6 @@ const products = data.products;
 // console.log(typeof products);
 
 const express = require("express");
-const { Server } = require("http");
 const app = express();
 
 //======MiddleWare=====
@@ -26,8 +25,13 @@ const app = express();
 //   req.next();
 // });
 
+//-------------bodyParser-----------Build-in Middleware
+// app.use(express.json());
+// app.use(express.urlencoded());
+// app.use(express.static("public"));
+
 const auth = (req, res, next) => {
-  console.log(req.query); // req.query check the path // output: {} //as it is empty
+  // console.log(req.query); // req.query check the path // output: {} //as it is empty
   // send http://localhost:8080/?password and reload // output: { password: ""}
   // send http://localhost:8080/?password=123 and reload // output: { password: "123"} // 123
   console.log(req.query.password);
@@ -38,20 +42,26 @@ const auth = (req, res, next) => {
   } else {
     res.sendStatus(401);
   }
+
   //   next();
+
+  // if (req.body.password === "123") {
+  //   next();
+  // } else {
+  //   res.sendStatus(401);
+  // }
 };
 
 // It used for all method(GET, PUT, POST...)
 // app.use(auth);
 
-//API -Endpoint  -Route
-
+//===============API -Endpoint  -Route==========
 //using auth for GET method
 app.get("/", auth, (req, res) => {
   res.json({ type: "GET" });
 });
 
-//using auth for POST method
+//using auth for POST methdod
 app.post("/", auth, (req, res) => {
   res.json({ type: "POST" });
 });
