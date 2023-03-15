@@ -9,8 +9,14 @@ const products = data.products;
 
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 
 //======MiddleWare=====
+
+//-----------Third party middleware--------------
+
+// app.use(morgan("dev"));
+app.use(morgan("default"));
 
 //Middleware used for whole application
 // app.use((req, res) => {
@@ -28,7 +34,7 @@ const app = express();
 //-------------bodyParser-----------Build-in Middleware
 // app.use(express.json());
 // app.use(express.urlencoded());
-// app.use(express.static("public"));
+app.use(express.static("public"));
 
 const auth = (req, res, next) => {
   // console.log(req.query); // req.query check the path // output: {} //as it is empty
