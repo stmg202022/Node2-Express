@@ -9,14 +9,21 @@ const products = data.products;
 
 const express = require("express");
 const app = express();
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
-//======MiddleWare=====
+//==================MiddleWare=====
 
-//-----------Third party middleware--------------
+//--------------------------Third party middleware-------------------------------------------(d)
 
 // app.use(morgan("dev"));
-app.use(morgan("default"));
+// app.use(morgan("default"));
+
+//-------------bodyParser-----------Build-in Middleware--------------------------------------(c)
+// app.use(express.json());
+// app.use(express.urlencoded());
+// app.use(express.static("public"));
+
+// ---------It used for all method(GET, PUT, POST...)------------------------------------------(a)//application level
 
 //Middleware used for whole application
 // app.use((req, res) => {
@@ -31,26 +38,24 @@ app.use(morgan("default"));
 //   req.next();
 // });
 
-//-------------bodyParser-----------Build-in Middleware
-// app.use(express.json());
-// app.use(express.urlencoded());
-app.use(express.static("public"));
-
+//----------------just functionally created middleware-------()
 const auth = (req, res, next) => {
+  //----------------query ---------------------(1)
   // console.log(req.query); // req.query check the path // output: {} //as it is empty
   // send http://localhost:8080/?password and reload // output: { password: ""}
   // send http://localhost:8080/?password=123 and reload // output: { password: "123"} // 123
-  console.log(req.query.password);
+  // console.log(req.query.password);
 
   //if http://localhost:8080/?password=123 then next() // do not put any password for auth and use ==
-  if (req.query.password === "123") {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
-
+  // if (req.query.password === "123") {
   //   next();
+  // } else {
+  //   res.sendStatus(401);
+  // }
 
+  next();
+
+  //-------------body-------------(2)
   // if (req.body.password === "123") {
   //   next();
   // } else {
@@ -58,12 +63,13 @@ const auth = (req, res, next) => {
   // }
 };
 
-// It used for all method(GET, PUT, POST...)
 // app.use(auth);
 
 //===============API -Endpoint  -Route==========
-//using auth for GET method
-app.get("/", auth, (req, res) => {
+//-----------using auth for GET method------------------------------------------------(b) ---//Route level
+app.get("/product/:id", auth, (req, res) => {
+  //----------"/product/:id" <= URLparameters---------(3)
+  console.log(req.params);
   res.json({ type: "GET" });
 });
 
